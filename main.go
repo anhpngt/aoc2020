@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/anhpngt/aoc2020/internal/common"
 	"github.com/anhpngt/aoc2020/internal/day1"
@@ -38,13 +39,22 @@ func processFlag() {
 
 	if help {
 		printUsage()
-		flag.PrintDefaults()
 		os.Exit(0)
+	}
+
+	if flag.NArg() > 0 {
+		var err error
+		targetDay, err = strconv.Atoi(flag.Arg(0))
+		if err != nil {
+			printUsage()
+			os.Exit(1)
+		}
 	}
 }
 
 func printUsage() {
-	fmt.Println("Usage: go run main.go -d [TARGET]")
+	fmt.Println("Usage: go run main.go -d TARGET_DAY")
+	flag.PrintDefaults()
 }
 
 func solve(n int) {
