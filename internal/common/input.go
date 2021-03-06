@@ -9,6 +9,9 @@ import (
 	"runtime"
 )
 
+// fileScanBufferSize is the buffer size while scanning input files, in KB.
+const fileScanBufferSize = 1024
+
 var inputDirectory string
 
 func init() {
@@ -51,6 +54,8 @@ func LoadInputAsync(ctx context.Context, day, chanSize int) <-chan LineContent {
 		}
 
 		scanner := bufio.NewScanner(file)
+		buf := make([]byte, 0, 64*1024)
+		scanner.Buffer(buf, fileScanBufferSize*1024) // increase the buffer size from 64 KB
 		for scanner.Scan() {
 			select {
 			case <-ctx.Done():
