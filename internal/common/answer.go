@@ -1,9 +1,13 @@
 package common
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 )
+
+// ErrCannotComputeAnswer happens when the algorithm cannot find the answer.
+var ErrCannotComputeAnswer = errors.New("cannot compute the answer")
 
 // Answer contains the answer to a single question.
 type Answer string

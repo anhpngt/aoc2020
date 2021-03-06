@@ -1,6 +1,10 @@
 package common
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+	"time"
+)
 
 // Puzzle represents a specific day's puzzle.
 type Puzzle interface {
@@ -8,10 +12,10 @@ type Puzzle interface {
 	Day() int
 
 	// Load loads the puzzle input.
-	Load() error
+	Load(context.Context) error
 
 	// Reload reloads the puzzle input, if needed, after solving part 1.
-	Reload() error
+	Reload(context.Context) error
 
 	// SolvePart1 solves and returns part 1's answer to the puzzle.
 	SolvePart1() (Answer, error)
@@ -20,22 +24,43 @@ type Puzzle interface {
 	SolvePart2() (Answer, error)
 }
 
+const (
+	// ChannelSizeDefault is the default size for the channels created by functions
+	// in this package.
+	ChannelSizeDefault = 5
+
+	// AlgorithmTimeout is the time out duration to solve a day's puzzle.
+	AlgorithmTimeout = 30 * time.Second
+)
+
 // Solve returns the answer to the puzzle.
 func Solve(p Puzzle) (*AnswerOfDay, error) {
-	if err := p.Load(); err != nil {
-		return nil, fmt.Errorf("cannot load puzzle for day %d: %s", p.Day(), err)
+	ctx, cancel := context.WithTimeout(context.Background(), AlgorithmTimeout)
+	defer cancel()
+
+	err := p.Load(ctx)
+	if err == nil {
+		err = ctx.Err()
 	}
-	ans1, err := p.SolvePart1()
 	if err != nil {
-		return nil, fmt.Errorf("cannot solve part 1 of day %d: %s", p.Day(), err)
+		return nil, fmt.Errorf("failed to load input: %s", err)
 	}
 
-	if err = p.Reload(); err != nil {
-		return nil, fmt.Errorf("cannot reload puzzle for day %d: %s", p.Day(), err)
+	ans1, err := p.SolvePart1()
+	if err != nil {
+		return nil, fmt.Errorf("failed to solve part 1: %s", err)
+	}
+
+	err = p.Reload(ctx)
+	if err == nil {
+		err = ctx.Err()
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to reload input: %s", err)
 	}
 	ans2, err := p.SolvePart2()
 	if err != nil {
-		return nil, fmt.Errorf("cannot solve part 2 of day %d: %s", p.Day(), err)
+		return nil, fmt.Errorf("failed to solve part 2: %s", err)
 	}
 	return &AnswerOfDay{
 		Day:    p.Day(),

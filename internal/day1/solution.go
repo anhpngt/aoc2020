@@ -1,9 +1,9 @@
 package day1
 
 import (
+	"context"
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/anhpngt/aoc2020/internal/common"
 )
@@ -25,28 +25,25 @@ func (p *Puzzle) Day() int {
 }
 
 // Load loads the puzzle input for day 1.
-func (p *Puzzle) Load() error {
-	rawData, err := common.LoadPuzzleInput(dayNumber)
-	if err != nil {
-		return fmt.Errorf("failed to load input: %s", err)
-	}
-
-	for _, strVal := range strings.Split(string(rawData), "\n") {
-		if strVal == "" {
-			// Blank line at the end of file
-			break
+func (p *Puzzle) Load(ctx context.Context) error {
+	datastream := common.LoadInputAsync(ctx, p.Day(), common.ChannelSizeDefault)
+	for dataline := range datastream {
+		if dataline.Err != nil {
+			return dataline.Err
 		}
-		intVal, err := strconv.Atoi(strVal)
+
+		intVal, err := strconv.Atoi(string(dataline.Content))
 		if err != nil {
-			return fmt.Errorf("error while reading input: %s", err)
+			return fmt.Errorf("invalid line input: %s", err)
 		}
 		p.expenses = append(p.expenses, intVal)
 	}
+
 	return nil
 }
 
-// Reload does nothing since it is not necessary for day 1.
-func (p *Puzzle) Reload() error {
+// Reload is not necessary for day 1.
+func (p *Puzzle) Reload(context.Context) error {
 	return nil
 }
 
@@ -61,7 +58,7 @@ func (p *Puzzle) SolvePart1() (common.Answer, error) {
 
 		lookup[v1] = struct{}{}
 	}
-	return "", fmt.Errorf("failed to solve part 1 of day %d's puzzle", dayNumber)
+	return "", common.ErrCannotComputeAnswer
 }
 
 // SolvePart2 returns the answer to day 1, part 2.
@@ -80,5 +77,5 @@ func (p *Puzzle) SolvePart2() (common.Answer, error) {
 			return common.ToAnswer(v12 * v3), nil
 		}
 	}
-	return "", fmt.Errorf("failed to solve part 1 of day %d's puzzle", dayNumber)
+	return "", common.ErrCannotComputeAnswer
 }
