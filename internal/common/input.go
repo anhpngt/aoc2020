@@ -46,7 +46,7 @@ func LoadInputAsync(ctx context.Context, day, chanSize int) <-chan LineContent {
 			select {
 			case <-ctx.Done():
 				return
-			case out <- LineContent{nil, fmt.Errorf("cannot open file %s: %s", filename, err)}:
+			case out <- LineContent{nil, err}:
 			}
 		}
 
