@@ -1,6 +1,7 @@
 # AOC 2020
 
-![test](https://github.com/anhpngt/aoc2020/actions/workflows/test.yml/badge.svg)
+[![test](https://github.com/anhpngt/aoc2020/actions/workflows/test.yml/badge.svg)](https://github.com/anhpngt/aoc2020/actions)
+[![codecov](https://codecov.io/gh/anhpngt/aoc2020/branch/master/graph/badge.svg)](https://codecov.io/gh/anhpngt/aoc2020)
 
 ## Introduction
 
