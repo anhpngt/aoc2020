@@ -50,9 +50,9 @@ func loadInputAsync(ctx context.Context, day, chanSize int) <-chan LineContent {
 		if err != nil {
 			select {
 			case <-ctx.Done():
-				return
 			case out <- LineContent{nil, err}:
 			}
+			return
 		}
 
 		scanner := bufio.NewScanner(file)
