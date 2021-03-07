@@ -11,10 +11,11 @@ import (
 	"github.com/anhpngt/aoc2020/internal/day2"
 	"github.com/anhpngt/aoc2020/internal/day3"
 	"github.com/anhpngt/aoc2020/internal/day4"
+	"github.com/anhpngt/aoc2020/internal/day5"
 )
 
 // NumDaySolved is the number of days this solution has solved.
-const NumDaySolved = 4
+const NumDaySolved = 5
 
 var (
 	help      bool
@@ -23,7 +24,7 @@ var (
 
 func init() {
 	flag.BoolVar(&help, "h", false, "print help message")
-	flag.IntVar(&targetDay, "d", 0, fmt.Sprintf("day number to solve, must be greater than 0 and less than %d", NumDaySolved+1))
+	flag.IntVar(&targetDay, "d", 0, fmt.Sprintf("day number to solve, must be in the range of 0 and %d inclusive", NumDaySolved))
 }
 
 func main() {
@@ -31,7 +32,7 @@ func main() {
 
 	if !(0 < targetDay && targetDay <= NumDaySolved) {
 		printUsage()
-		panic(fmt.Errorf("invalid target day to solve, must be greater than 0 and less than %d", NumDaySolved+1))
+		panic(fmt.Errorf("invalid target day to solve, must be in the range of 0 and %d inclusive", NumDaySolved))
 	}
 
 	solve(targetDay)
@@ -72,6 +73,8 @@ func solve(n int) {
 		p = &day3.Puzzle{}
 	case 4:
 		p = &day4.Puzzle{}
+	case 5:
+		p = &day5.Puzzle{}
 	}
 
 	ans, err := common.Solve(p)
