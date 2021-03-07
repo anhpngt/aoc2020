@@ -148,7 +148,7 @@ func (p *Puzzle) Load(ctx context.Context, datastream <-chan *common.LineContent
 		kvList := strings.Split(linestr, " ")
 		for _, kv := range kvList {
 			if err := pprt.mapKeyValue(kv); err != nil {
-				return fmt.Errorf("invalid key:value pair \"%s\": %s", kv, err)
+				return err
 			}
 		}
 	}

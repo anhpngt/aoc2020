@@ -1,6 +1,8 @@
 package day2
 
 import (
+	"context"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,7 +11,7 @@ import (
 	"github.com/anhpngt/aoc2020/internal/common"
 )
 
-func TestValidatePosition(t *testing.T) {
+func TestPasswordPolicy_ValidatePosition(t *testing.T) {
 	testcase := []struct {
 		pw     password
 		pwp    passwordPolicy
@@ -35,6 +37,19 @@ func TestValidatePosition(t *testing.T) {
 	for _, tc := range testcase {
 		require.Equal(t, tc.expect, tc.pwp.validatePosition(tc.pw))
 	}
+}
+
+func TestPuzzle_Load(t *testing.T) {
+	p := &Puzzle{}
+	out := make(chan *common.LineContent, 1)
+
+	out <- &common.LineContent{Content: nil, Err: errors.New("cannot open file: a reason")}
+	err := p.Load(context.Background(), out)
+	assert.EqualError(t, err, "cannot open file: a reason")
+
+	out <- &common.LineContent{Content: []byte("not a number"), Err: nil}
+	err = p.Load(context.Background(), out)
+	assert.EqualError(t, err, "invalid line input: \"not a number\", error: expected integer")
 }
 
 func TestSolveExample(t *testing.T) {

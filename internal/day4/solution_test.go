@@ -1,6 +1,8 @@
 package day4
 
 import (
+	"context"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -152,6 +154,19 @@ func TestPassport_IsPIDValid(t *testing.T) {
 			assert.Falsef(t, p.isPIDValid(), "%s should not be a valid passport ID", tc)
 		}
 	})
+}
+
+func TestPuzzle_Load(t *testing.T) {
+	p := &Puzzle{}
+	out := make(chan *common.LineContent, 1)
+
+	out <- &common.LineContent{Content: nil, Err: errors.New("cannot open file: a reason")}
+	err := p.Load(context.Background(), out)
+	assert.EqualError(t, err, "cannot open file: a reason")
+
+	out <- &common.LineContent{Content: []byte("invalid-key-value-pair")}
+	err = p.Load(context.Background(), out)
+	assert.EqualError(t, err, "invalid format for key:value pair: invalid-key-value-pair")
 }
 
 func TestSolveExample(t *testing.T) {

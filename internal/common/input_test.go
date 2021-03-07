@@ -19,6 +19,15 @@ func TestGetInputFilename(t *testing.T) {
 	require.Equal(t, expected, getInputFilename(n))
 }
 
+func TestGetExampleInputFilename(t *testing.T) {
+	_, fn, _, ok := runtime.Caller(0)
+	require.True(t, ok)
+
+	n := 1
+	expected := filepath.Join(filepath.Dir(fn), fmt.Sprintf("../../input/%d.example.txt", n))
+	require.Equal(t, expected, getExampleInputFilename(n))
+}
+
 func TestLoadInputAsync_Success(t *testing.T) {
 	require := require.New(t)
 	datastream := loadInputAsync(context.Background(), 1, ChannelSizeDefault)
@@ -51,6 +60,15 @@ func TestLoadInputAsync_Canceled(t *testing.T) {
 	// cancel the context manually, but we do not know when select statement
 	// will choose ctx.Done() over out<-
 	cancel()
+	for data := range datastream {
+		require.NoError(data.Err)
+		require.NotEmpty(data.Content)
+	}
+}
+
+func TestLoadExampleInputAsync_Success(t *testing.T) {
+	require := require.New(t)
+	datastream := loadExampleInputAsync(context.Background(), 1, ChannelSizeDefault)
 	for data := range datastream {
 		require.NoError(data.Err)
 		require.NotEmpty(data.Content)
