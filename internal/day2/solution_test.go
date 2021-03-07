@@ -8,11 +8,6 @@ import (
 	"github.com/anhpngt/aoc2020/internal/common"
 )
 
-const (
-	firstAns  common.Answer = "600"
-	secondAns common.Answer = "245"
-)
-
 func TestValidatePosition(t *testing.T) {
 	testcase := []struct {
 		pw     password
@@ -44,6 +39,6 @@ func TestValidatePosition(t *testing.T) {
 func TestSolutionDay1(t *testing.T) {
 	ans, err := common.Solve(&Puzzle{})
 	require.NoError(t, err)
-	require.Equal(t, firstAns, ans.First)
-	require.Equal(t, secondAns, ans.Second)
+	require.Equal(t, common.Answer("600"), ans.First)
+	require.Equal(t, common.Answer("245"), ans.Second)
 }
