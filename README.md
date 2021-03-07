@@ -1,5 +1,7 @@
 # AOC 2020
 
+![test](https://github.com/anhpngt/aoc2020/actions/workflows/test.yml/badge.svg)
+
 ## Introduction
 
 Website: [Advent Of Code](https://adventofcode.com/)
