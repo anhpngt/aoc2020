@@ -12,7 +12,7 @@ type Puzzle interface {
 	Day() int
 
 	// Load loads the puzzle input.
-	Load(context.Context, <-chan LineContent) error
+	Load(context.Context, <-chan *LineContent) error
 
 	// SolvePart1 solves and returns part 1's answer to the puzzle.
 	SolvePart1() (Answer, error)

@@ -42,7 +42,7 @@ func getExampleInputFilename(n int) string {
 // loadInputAsync reads puzzle input for the day and passes each line from the file to the
 // returned channel. The channel is closed by the function itself when the reading is finished,
 // or when the context is canceled.
-func loadInputAsync(ctx context.Context, day, chanSize int) <-chan LineContent {
+func loadInputAsync(ctx context.Context, day, chanSize int) <-chan *LineContent {
 	filename := getInputFilename(day)
 	return loadFileAsync(ctx, filename, chanSize)
 }
@@ -50,7 +50,7 @@ func loadInputAsync(ctx context.Context, day, chanSize int) <-chan LineContent {
 // loadExampleInputAsync reads puzzle example input for the day and passes each line from the
 // file to the returned channel. The channel is closed by the function itself when the reading
 // is finished, or when the context is canceled.
-func loadExampleInputAsync(ctx context.Context, day, chanSize int) <-chan LineContent {
+func loadExampleInputAsync(ctx context.Context, day, chanSize int) <-chan *LineContent {
 	filename := getExampleInputFilename(day)
 	return loadFileAsync(ctx, filename, chanSize)
 }
@@ -58,11 +58,11 @@ func loadExampleInputAsync(ctx context.Context, day, chanSize int) <-chan LineCo
 // loadFileAsync reads from file and passes each line from the file to the returned channel.
 // The channel is closed by the function itself when the reading is finished, or when the context
 // is canceled.
-func loadFileAsync(ctx context.Context, filename string, chanSize int) <-chan LineContent {
+func loadFileAsync(ctx context.Context, filename string, chanSize int) <-chan *LineContent {
 	if chanSize < 0 {
 		chanSize = 0
 	}
-	out := make(chan LineContent, chanSize)
+	out := make(chan *LineContent, chanSize)
 	go func() {
 		defer close(out)
 
@@ -70,7 +70,7 @@ func loadFileAsync(ctx context.Context, filename string, chanSize int) <-chan Li
 		if err != nil {
 			select {
 			case <-ctx.Done():
-			case out <- LineContent{nil, err}:
+			case out <- &LineContent{nil, err}:
 			}
 			return
 		}
@@ -82,7 +82,7 @@ func loadFileAsync(ctx context.Context, filename string, chanSize int) <-chan Li
 			select {
 			case <-ctx.Done():
 				return
-			case out <- LineContent{scanner.Bytes(), nil}:
+			case out <- &LineContent{scanner.Bytes(), nil}:
 			}
 		}
 
@@ -90,7 +90,7 @@ func loadFileAsync(ctx context.Context, filename string, chanSize int) <-chan Li
 			select {
 			case <-ctx.Done():
 				return
-			case out <- LineContent{nil, fmt.Errorf("an error occurred while reading from input file: %s", err)}:
+			case out <- &LineContent{nil, fmt.Errorf("an error occurred while reading from input file: %s", err)}:
 			}
 		}
 	}()

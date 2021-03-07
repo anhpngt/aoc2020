@@ -52,7 +52,7 @@ func (p *Puzzle) Day() int {
 }
 
 // Load loads the puzzle input for day 2.
-func (p *Puzzle) Load(ctx context.Context, datastream <-chan common.LineContent) error {
+func (p *Puzzle) Load(ctx context.Context, datastream <-chan *common.LineContent) error {
 	for dataline := range datastream {
 		if dataline.Err != nil {
 			return dataline.Err

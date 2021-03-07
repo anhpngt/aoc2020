@@ -38,8 +38,9 @@ func TestLoadInputAsync_InvalidFileLocation(t *testing.T) {
 	require.True(t, ok)
 
 	// Channel notifying closure
-	_, ok = <-datastream
+	data, ok = <-datastream
 	require.False(t, ok)
+	require.Nil(t, data)
 }
 
 func TestLoadInputAsync_Canceled(t *testing.T) {
