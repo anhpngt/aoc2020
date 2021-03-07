@@ -51,7 +51,7 @@ func (p *Puzzle) Day() int {
 	return dayNumber
 }
 
-// Load loads the puzzle input for day 1.
+// Load loads the puzzle input for day 2.
 func (p *Puzzle) Load(ctx context.Context) error {
 	datastream := common.LoadInputAsync(ctx, p.Day(), common.ChannelSizeDefault)
 	for dataline := range datastream {
