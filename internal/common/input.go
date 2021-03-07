@@ -22,11 +22,6 @@ func init() {
 	inputDirectory = filepath.Join(filepath.Dir(fn), "../../input")
 }
 
-// getInputFilename returns absolute path to the puzzle input of day n.
-func getInputFilename(n int) string {
-	return filepath.Join(inputDirectory, fmt.Sprintf("%d.txt", n))
-}
-
 // LineContent contains data of a line in the input file. It also contains the error
 // for inter-channel communication.
 type LineContent struct {
@@ -34,8 +29,15 @@ type LineContent struct {
 	Err     error
 }
 
-// LoadInputAsync ...
-func LoadInputAsync(ctx context.Context, day, chanSize int) <-chan LineContent {
+// getInputFilename returns absolute path to the puzzle input of day n.
+func getInputFilename(n int) string {
+	return filepath.Join(inputDirectory, fmt.Sprintf("%d.txt", n))
+}
+
+// loadInputAsync reads puzzle input for the day and passes each line from the file to the
+// returned channel. The channel is closed by the function itself when the reading is finished,
+// or when the context is canceled.
+func loadInputAsync(ctx context.Context, day, chanSize int) <-chan LineContent {
 	if chanSize < 0 {
 		chanSize = 0
 	}

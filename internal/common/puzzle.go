@@ -12,10 +12,7 @@ type Puzzle interface {
 	Day() int
 
 	// Load loads the puzzle input.
-	Load(context.Context) error
-
-	// Reload reloads the puzzle input, if needed, after solving part 1.
-	Reload(context.Context) error
+	Load(context.Context, <-chan LineContent) error
 
 	// SolvePart1 solves and returns part 1's answer to the puzzle.
 	SolvePart1() (Answer, error)
@@ -38,7 +35,8 @@ func Solve(p Puzzle) (*AnswerOfDay, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), AlgorithmTimeout)
 	defer cancel()
 
-	err := p.Load(ctx)
+	datastream := loadInputAsync(ctx, p.Day(), ChannelSizeDefault)
+	err := p.Load(ctx, datastream)
 	if err == nil {
 		err = ctx.Err()
 	}
@@ -49,14 +47,6 @@ func Solve(p Puzzle) (*AnswerOfDay, error) {
 	ans1, err := p.SolvePart1()
 	if err != nil {
 		return nil, fmt.Errorf("failed to solve part 1: %s", err)
-	}
-
-	err = p.Reload(ctx)
-	if err == nil {
-		err = ctx.Err()
-	}
-	if err != nil {
-		return nil, fmt.Errorf("failed to reload input: %s", err)
 	}
 	ans2, err := p.SolvePart2()
 	if err != nil {

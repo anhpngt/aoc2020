@@ -25,8 +25,7 @@ func (p *Puzzle) Day() int {
 }
 
 // Load loads the puzzle input for day 1.
-func (p *Puzzle) Load(ctx context.Context) error {
-	datastream := common.LoadInputAsync(ctx, p.Day(), common.ChannelSizeDefault)
+func (p *Puzzle) Load(ctx context.Context, datastream <-chan common.LineContent) error {
 	for dataline := range datastream {
 		if dataline.Err != nil {
 			return dataline.Err
@@ -39,11 +38,6 @@ func (p *Puzzle) Load(ctx context.Context) error {
 		p.expenses = append(p.expenses, intVal)
 	}
 
-	return nil
-}
-
-// Reload is not necessary for day 1.
-func (p *Puzzle) Reload(context.Context) error {
 	return nil
 }
 

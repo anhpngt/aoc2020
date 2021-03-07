@@ -67,8 +67,7 @@ func (p *Puzzle) Day() int {
 }
 
 // Load loads the puzzle input for day 3.
-func (p *Puzzle) Load(ctx context.Context) error {
-	datastream := common.LoadInputAsync(ctx, p.Day(), common.ChannelSizeDefault)
+func (p *Puzzle) Load(ctx context.Context, datastream <-chan common.LineContent) error {
 	gridData := make([][]rune, 0)
 	for dataline := range datastream {
 		if dataline.Err != nil {
@@ -84,11 +83,6 @@ func (p *Puzzle) Load(ctx context.Context) error {
 	var err error
 	p.travelMap, err = newGrid(len(gridData), len(gridData[0]), gridData)
 	return err
-}
-
-// Reload is not necessary for day 3.
-func (p *Puzzle) Reload(context.Context) error {
-	return nil
 }
 
 // countTreesEncountered counts the number of tree encountered if slope (dr, dc) is chosen.
