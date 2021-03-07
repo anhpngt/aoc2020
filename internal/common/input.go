@@ -34,10 +34,31 @@ func getInputFilename(n int) string {
 	return filepath.Join(inputDirectory, fmt.Sprintf("%d.txt", n))
 }
 
+// getExampleInputFilename returns absolute path to the puzzle example input of day n.
+func getExampleInputFilename(n int) string {
+	return filepath.Join(inputDirectory, fmt.Sprintf("%d.example.txt", n))
+}
+
 // loadInputAsync reads puzzle input for the day and passes each line from the file to the
 // returned channel. The channel is closed by the function itself when the reading is finished,
 // or when the context is canceled.
 func loadInputAsync(ctx context.Context, day, chanSize int) <-chan LineContent {
+	filename := getInputFilename(day)
+	return loadFileAsync(ctx, filename, chanSize)
+}
+
+// loadExampleInputAsync reads puzzle example input for the day and passes each line from the
+// file to the returned channel. The channel is closed by the function itself when the reading
+// is finished, or when the context is canceled.
+func loadExampleInputAsync(ctx context.Context, day, chanSize int) <-chan LineContent {
+	filename := getExampleInputFilename(day)
+	return loadFileAsync(ctx, filename, chanSize)
+}
+
+// loadFileAsync reads from file and passes each line from the file to the returned channel.
+// The channel is closed by the function itself when the reading is finished, or when the context
+// is canceled.
+func loadFileAsync(ctx context.Context, filename string, chanSize int) <-chan LineContent {
 	if chanSize < 0 {
 		chanSize = 0
 	}
@@ -45,7 +66,6 @@ func loadInputAsync(ctx context.Context, day, chanSize int) <-chan LineContent {
 	go func() {
 		defer close(out)
 
-		filename := getInputFilename(day)
 		file, err := os.Open(filename)
 		if err != nil {
 			select {

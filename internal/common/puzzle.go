@@ -44,6 +44,27 @@ func Solve(p Puzzle) (*AnswerOfDay, error) {
 		return nil, fmt.Errorf("failed to load input: %s", err)
 	}
 
+	return computeAnswer(p)
+}
+
+// SolveExample returns the answer to the example given in the puzzle.
+func SolveExample(p Puzzle) (*AnswerOfDay, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), AlgorithmTimeout)
+	defer cancel()
+
+	datastream := loadExampleInputAsync(ctx, p.Day(), ChannelSizeDefault)
+	err := p.Load(ctx, datastream)
+	if err == nil {
+		err = ctx.Err()
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to load input: %s", err)
+	}
+
+	return computeAnswer(p)
+}
+
+func computeAnswer(p Puzzle) (*AnswerOfDay, error) {
 	ans1, err := p.SolvePart1()
 	if err != nil {
 		return nil, fmt.Errorf("failed to solve part 1: %s", err)

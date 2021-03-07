@@ -4,8 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/anhpngt/aoc2020/internal/common"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/anhpngt/aoc2020/internal/common"
 )
 
 func TestNewGrid(t *testing.T) {
@@ -34,35 +36,15 @@ func TestNewGrid(t *testing.T) {
 }
 
 func TestSolveExample(t *testing.T) {
-	data := [][]rune{
-		[]rune("..##......."),
-		[]rune("#...#...#.."),
-		[]rune(".#....#..#."),
-		[]rune("..#.#...#.#"),
-		[]rune(".#...##..#."),
-		[]rune("..#.##....."),
-		[]rune(".#.#.#....#"),
-		[]rune(".#........#"),
-		[]rune("#.##...#..."),
-		[]rune("#...##....#"),
-		[]rune(".#..#...#.#"),
-	}
-	griddata, err := newGrid(len(data), len(data[0]), data)
+	ans, err := common.SolveExample(&Puzzle{})
 	require.NoError(t, err)
-
-	puzzle := Puzzle{griddata}
-	ans, err := puzzle.SolvePart1()
-	require.NoError(t, err)
-	require.Equal(t, common.Answer("7"), ans)
-
-	ans, err = puzzle.SolvePart2()
-	require.NoError(t, err)
-	require.Equal(t, common.Answer("336"), ans)
+	assert.Equal(t, common.Answer("7"), ans.First)
+	assert.Equal(t, common.Answer("336"), ans.Second)
 }
 
 func TestSolve(t *testing.T) {
 	ans, err := common.Solve(&Puzzle{})
 	require.NoError(t, err)
-	require.Equal(t, common.Answer("259"), ans.First)
-	require.Equal(t, common.Answer("2224913600"), ans.Second)
+	assert.Equal(t, common.Answer("259"), ans.First)
+	assert.Equal(t, common.Answer("2224913600"), ans.Second)
 }

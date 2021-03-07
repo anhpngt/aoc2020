@@ -3,6 +3,7 @@ package day2
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/anhpngt/aoc2020/internal/common"
@@ -36,9 +37,16 @@ func TestValidatePosition(t *testing.T) {
 	}
 }
 
-func TestSolutionDay1(t *testing.T) {
+func TestSolveExample(t *testing.T) {
+	ans, err := common.SolveExample(&Puzzle{})
+	require.NoError(t, err)
+	assert.Equal(t, common.Answer("2"), ans.First)
+	assert.Equal(t, common.Answer("1"), ans.Second)
+}
+
+func TestSolve(t *testing.T) {
 	ans, err := common.Solve(&Puzzle{})
 	require.NoError(t, err)
-	require.Equal(t, common.Answer("600"), ans.First)
-	require.Equal(t, common.Answer("245"), ans.Second)
+	assert.Equal(t, common.Answer("600"), ans.First)
+	assert.Equal(t, common.Answer("245"), ans.Second)
 }
