@@ -51,13 +51,18 @@ func TestNewGrid(t *testing.T) {
 func TestPuzzle_Load(t *testing.T) {
 	p := &Puzzle{}
 	out := make(chan *common.LineContent, 1)
+	defer close(out)
 
 	out <- &common.LineContent{Content: nil, Err: errors.New("cannot open file: a reason")}
 	err := p.Load(context.Background(), out)
 	assert.EqualError(t, err, "cannot open file: a reason")
+}
 
+func TestPuzzle_LoadEmpty(t *testing.T) {
+	p := &Puzzle{}
+	out := make(chan *common.LineContent, 1)
 	close(out)
-	err = p.Load(context.Background(), out)
+	err := p.Load(context.Background(), out)
 	assert.EqualError(t, err, "the input data is empty")
 }
 

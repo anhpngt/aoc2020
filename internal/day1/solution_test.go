@@ -14,6 +14,7 @@ import (
 func TestPuzzle_Load(t *testing.T) {
 	p := &Puzzle{}
 	out := make(chan *common.LineContent, 1)
+	defer close(out)
 
 	out <- &common.LineContent{Content: nil, Err: errors.New("cannot open file: a reason")}
 	err := p.Load(context.Background(), out)
