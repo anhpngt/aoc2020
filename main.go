@@ -8,6 +8,7 @@ import (
 
 	"github.com/anhpngt/aoc2020/internal/common"
 	"github.com/anhpngt/aoc2020/internal/day1"
+	"github.com/anhpngt/aoc2020/internal/day10"
 	"github.com/anhpngt/aoc2020/internal/day2"
 	"github.com/anhpngt/aoc2020/internal/day3"
 	"github.com/anhpngt/aoc2020/internal/day4"
@@ -19,7 +20,7 @@ import (
 )
 
 // NumDaySolved is the number of days this solution has solved.
-const NumDaySolved = 9
+const NumDaySolved = 10
 
 var (
 	help      bool
@@ -87,6 +88,8 @@ func solve(n int) {
 		p = &day8.Puzzle{}
 	case 9:
 		p = &day9.Puzzle{}
+	case 10:
+		p = &day10.Puzzle{}
 	}
 
 	ans, err := common.Solve(p)
